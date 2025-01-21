@@ -31,13 +31,21 @@ const parser = (args: string[]): BmiInputs => {
   };
 };
 
-try {
-  const { h, w } = parser(process.argv);
-  console.log(calculateBmi(h, w));
-} catch (error: unknown) {
-  let errMsg = 'unknown error';
-  if (error instanceof Error) {
-    errMsg = 'Error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { h, w } = parser(process.argv);
+    console.log(calculateBmi(h, w));
+  } catch (error: unknown) {
+    let errMsg = 'unknown error';
+    if (error instanceof Error) {
+      errMsg = 'Error: ' + error.message;
+    }
+    console.log(errMsg);
   }
-  console.log(errMsg);
 }
+
+const bmi = (height: number, weight: number) => {
+  return calculateBmi(height, weight);
+};
+
+export default bmi;
