@@ -30,12 +30,12 @@ const calculateExercises = (target: number, weekly: number[]): Result => {
   } else if (diff <= -0.25) {
     rating = 4;
     ratingDescription = 'you did good';
-  } else if (diff >= 0.07) {
-    rating = 2;
-    ratingDescription = 'not too bad but could be better';
   } else if (diff >= 0.25) {
     rating = 1;
     ratingDescription = 'do better';
+  } else if (diff >= 0.07) {
+    rating = 2;
+    ratingDescription = 'not too bad but could be better';
   } else {
     rating = 3;
     ratingDescription = 'you tried';
@@ -67,13 +67,19 @@ const parser = (args: string[]): Inputs => {
   };
 };
 
-try {
-  const { target, weekly } = parser(process.argv);
-  console.log(calculateExercises(target, weekly));
-} catch (error: unknown) {
-  let errMsg = 'unknown error';
-  if (error instanceof Error) {
-    errMsg = 'error: ' + error.message;
+if (require.main === module) {
+  try {
+    const { target, weekly } = parser(process.argv);
+    console.log(calculateExercises(target, weekly));
+  } catch (error: unknown) {
+    let errMsg = 'unknown error';
+    if (error instanceof Error) {
+      errMsg = 'error: ' + error.message;
+    }
+    console.log(errMsg);
   }
-  console.log(errMsg);
 }
+
+export const exercise = (target: number, weekly: number[]): Result => {
+  return calculateExercises(target, weekly);
+};

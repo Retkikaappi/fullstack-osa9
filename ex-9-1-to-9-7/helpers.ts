@@ -1,1 +1,1 @@
-export const nanCheck = (num: any): boolean => isNaN(Number(num));
+export const nanCheck = (num: unknown): boolean => isNaN(Number(num));

@@ -3,6 +3,7 @@ const app = express();
 
 import bmi from './bmiCalculator';
 import { nanCheck } from './helpers';
+import { exercise } from './exerciseCalculator';
 
 app.use(express.json());
 
@@ -27,6 +28,32 @@ app.get('/bmi', (req, resp) => {
   }
 
   resp.send(bmi(Number(height), Number(weight)));
+  return;
+});
+
+app.post('/exercises', (req, resp) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { daily_exercises, target } = req.body;
+
+  if (!daily_exercises || !target || !(daily_exercises instanceof Array)) {
+    resp.status(400).json({ error: 'request parameters missing' });
+    return;
+  }
+  if (
+    nanCheck(target) ||
+    daily_exercises.some(nanCheck) ||
+    Number(target) < 0 ||
+    daily_exercises.some((e) => Number(e) < 0)
+  ) {
+    resp.status(400).json({ error: 'malformatted parameters' });
+    return;
+  }
+
+  const result = exercise(
+    Number(target),
+    daily_exercises.map((e) => Number(e))
+  );
+  resp.send(result);
   return;
 });
 
