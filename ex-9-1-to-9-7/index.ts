@@ -9,7 +9,6 @@ app.use(express.json());
 
 app.get('/hello', (_req, resp) => {
   resp.send('Hello Full Stack');
-  return;
 });
 
 app.get('/bmi', (req, resp) => {
@@ -28,7 +27,6 @@ app.get('/bmi', (req, resp) => {
   }
 
   resp.send(bmi(Number(height), Number(weight)));
-  return;
 });
 
 app.post('/exercises', (req, resp) => {
@@ -54,7 +52,6 @@ app.post('/exercises', (req, resp) => {
     daily_exercises.map((e) => Number(e))
   );
   resp.send(result);
-  return;
 });
 
 const PORT = 3001;
