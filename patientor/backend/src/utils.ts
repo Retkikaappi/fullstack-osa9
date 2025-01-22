@@ -1,62 +1,12 @@
-import { NewPatientRecord, Gender } from './types';
+import { Gender } from './types';
+import { z } from 'zod';
 
-const isString = (val: unknown): val is string => {
-  return typeof val === 'string' || val instanceof String;
-};
-
-const isValid = (val: unknown): string => {
-  if (!isString(val)) {
-    throw new Error(`"${val}" is not a string`);
-  }
-
-  return val;
-};
-
-const isDate = (date: unknown): string => {
-  if (!Date.parse(isValid(date))) {
-    throw new Error('date is invalid');
-  }
-
-  return date as string;
-};
-
-const inGenders = (val: string): val is Gender => {
-  return Object.values(Gender)
-    .map((e) => e.toString())
-    .includes(val);
-};
-
-const isGender = (val: unknown): Gender => {
-  const gender = isValid(val);
-  if (!inGenders(gender)) {
-    throw new Error(`${val} is not a gender`);
-  }
-  return gender;
-};
-
-const validatePatient = (patient: unknown): NewPatientRecord => {
-  if (!patient || typeof patient !== 'object') {
-    throw new Error('invalid arguments for creating a patient');
-  }
-
-  if (
-    'name' in patient &&
-    'ssn' in patient &&
-    'dateOfBirth' in patient &&
-    'gender' in patient &&
-    'occupation' in patient
-  ) {
-    const newPatient = {
-      name: isValid(patient.name),
-      ssn: isValid(patient.ssn),
-      dateOfBirth: isDate(patient.dateOfBirth),
-      gender: isGender(patient.gender),
-      occupation: isValid(patient.occupation),
-    };
-    return newPatient;
-  }
-
-  throw new Error('missing arguments for creating a patient');
-};
-
-export default validatePatient;
+export const newPatientSchema = z.object({
+  name: z.string(),
+  ssn: z.string(),
+  dateOfBirth: z.string().date(),
+  gender: z.nativeEnum(Gender, {
+    message: 'gender should be: male, female or other',
+  }),
+  occupation: z.string(),
+});

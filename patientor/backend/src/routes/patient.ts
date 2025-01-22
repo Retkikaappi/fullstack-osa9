@@ -1,6 +1,8 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import patientService from '../services/patientService';
-import validatePatient from '../utils';
+import { newPatientSchema } from '../utils';
+import { z } from 'zod';
+import { NewPatientRecord } from '../types';
 
 const router = express.Router();
 
@@ -8,18 +10,38 @@ router.get('/', (_req, resp) => {
   resp.send(patientService.getPublicPatientRecords());
 });
 
-router.post('/', (req, resp) => {
+const patientHandler = (req: Request, _resp: Response, next: NextFunction) => {
   try {
-    const validatedPatient = validatePatient(req.body);
-    const addedPatient = patientService.createNewPatient(validatedPatient);
-    resp.json(addedPatient);
+    newPatientSchema.parse(req.body);
+    next();
   } catch (error: unknown) {
-    let errMsg = 'unknown error';
-    if (error instanceof Error) {
-      errMsg = error.message;
-    }
-    resp.status(400).send(errMsg);
+    next(error);
   }
-});
+};
+
+const errorHandler = (
+  error: unknown,
+  _req: Request,
+  resp: Response,
+  next: NextFunction
+) => {
+  if (error instanceof z.ZodError) {
+    // voisi vääntää error.issues[0].message jotta viesti näyttäisi paremmalta frontissa, mutta ole vaivan arvoista
+    resp.status(400).send({ error: error.issues });
+  } else {
+    next(error);
+  }
+};
+
+router.post(
+  '/',
+  patientHandler,
+  (req: Request<unknown, unknown, NewPatientRecord>, resp: Response) => {
+    const addedPatient = patientService.createNewPatient(req.body);
+    resp.json(addedPatient);
+  }
+);
+
+router.use(errorHandler);
 
 export default router;

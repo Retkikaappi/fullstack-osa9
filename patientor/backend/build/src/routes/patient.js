@@ -5,23 +5,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const patientService_1 = __importDefault(require("../services/patientService"));
-const utils_1 = __importDefault(require("../utils"));
+const utils_1 = require("../utils");
+const zod_1 = require("zod");
 const router = express_1.default.Router();
 router.get('/', (_req, resp) => {
     resp.send(patientService_1.default.getPublicPatientRecords());
 });
-router.post('/', (req, resp) => {
+const patientHandler = (req, _resp, next) => {
     try {
-        const validatedPatient = (0, utils_1.default)(req.body);
-        const addedPatient = patientService_1.default.createNewPatient(validatedPatient);
-        resp.json(addedPatient);
+        utils_1.newPatientSchema.parse(req.body);
+        next();
     }
     catch (error) {
-        let errMsg = 'unknown error';
-        if (error instanceof Error) {
-            errMsg = error.message;
-        }
-        resp.status(400).send(errMsg);
+        next(error);
     }
+};
+const errorHandler = (error, _req, resp, next) => {
+    if (error instanceof zod_1.z.ZodError) {
+        // voisi vääntää error.issues[0].message jotta viesti näyttäisi paremmalta frontissa, mutta ole vaivan arvoista
+        resp.status(400).send({ error: error.issues });
+    }
+    else {
+        next(error);
+    }
+};
+router.post('/', patientHandler, (req, resp) => {
+    const addedPatient = patientService_1.default.createNewPatient(req.body);
+    resp.json(addedPatient);
 });
+router.use(errorHandler);
 exports.default = router;
