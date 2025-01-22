@@ -1,4 +1,7 @@
-const data = [
+import { PatientRecord } from '../src/types';
+import validatePatient from '../src/utils';
+
+const rawData = [
   {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',
@@ -40,5 +43,11 @@ const data = [
     occupation: 'Digital evangelist',
   },
 ];
+
+const data: PatientRecord[] = rawData.map((e) => {
+  const obj = validatePatient(e) as PatientRecord;
+  obj.id = e.id;
+  return obj;
+});
 
 export default data;

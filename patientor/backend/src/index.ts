@@ -6,6 +6,7 @@ import patientRouter from './routes/patient';
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 app.get('/api/ping', (_req, resp) => {
   console.log('ping');

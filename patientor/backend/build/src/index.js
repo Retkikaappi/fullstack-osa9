@@ -9,6 +9,7 @@ const diagnose_1 = __importDefault(require("./routes/diagnose"));
 const patient_1 = __importDefault(require("./routes/patient"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
+app.use(express_1.default.json());
 app.get('/api/ping', (_req, resp) => {
     console.log('ping');
     resp.send('pong');
