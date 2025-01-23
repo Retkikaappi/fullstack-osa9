@@ -2,18 +2,21 @@ import Header from './components/Header';
 import Content from './components/Content';
 import Total from './components/Total';
 
-export interface Name {
+export type Name = {
   name: string;
-}
+};
 
-// export interface CourseParts {
-//   name: string;
-//   exerciseCount: number;
-// }
+export type TotalCourses = {
+  total: number;
+};
+
+export type CourseParts = {
+  name: string;
+  exerciseCount: number;
+};
 
 const App = () => {
   const courseName = 'Half Stack application development';
-  // : CourseParts[]
   const courseParts = [
     {
       name: 'Fundamentals',
@@ -29,7 +32,7 @@ const App = () => {
     },
   ];
 
-  const totalExercises: number = courseParts.reduce(
+  const totalExercises = courseParts.reduce(
     (sum, part) => sum + part.exerciseCount,
     0
   );

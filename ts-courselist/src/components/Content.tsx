@@ -1,12 +1,6 @@
-// import { CourseParts } from '../App';
+import { CourseParts } from '../App';
 
-const Content = ({
-  courses,
-}: {
-  // courses: CourseParts[]
-  courses: { name: string; exerciseCount: number }[];
-}) => {
-  console.log(courses);
+const Content = ({ courses }: { courses: CourseParts[] }) => {
   return (
     <div>
       {courses.map((e) => (
