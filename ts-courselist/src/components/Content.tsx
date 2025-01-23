@@ -1,12 +1,17 @@
-import { CourseParts } from '../App';
+import { CoursePart } from '../App';
+import Part from './Part';
 
-const Content = ({ courses }: { courses: CourseParts[] }) => {
+const Content = ({ courses }: { courses: CoursePart[] }) => {
+  console.log(courses);
   return (
     <div>
-      {courses.map((e) => (
-        <p key={e.name}>
-          {e.name} {e.exerciseCount}
-        </p>
+      {courses.map((course) => (
+        <div key={course.name}>
+          <h3>
+            {course.name} {course.exerciseCount}
+          </h3>
+          <Part course={course} />
+        </div>
       ))}
     </div>
   );
