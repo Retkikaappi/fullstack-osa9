@@ -34,7 +34,6 @@ const createNewPatient = (patient: NewPatientRecord): PatientRecord => {
     entries: [],
     ...patient,
   };
-  console.log('new patient', newPatient);
   patients.push(newPatient);
   return newPatient;
 };

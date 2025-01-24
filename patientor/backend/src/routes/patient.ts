@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import patientService from '../services/patientService';
 import { newPatientSchema } from '../utils';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 import { NewPatientRecord } from '../types';
 
 const router = express.Router();
@@ -49,8 +49,19 @@ router.get('/:id', (req, resp) => {
 
 router.post('/:id/entries', (req, resp) => {
   const { id } = req.params;
-  const newEntry = patientService.addNewEntry(id, req.body);
-  resp.send(newEntry);
+  try {
+    const newEntry = patientService.addNewEntry(id, req.body);
+    resp.send(newEntry);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      console.log(error.issues);
+      resp
+        .status(400)
+        .json({ error: error.issues.map((e) => e.message).join(', ') });
+    }
+    resp.status(400).json({ error: error });
+    return;
+  }
 });
 
 router.use(errorHandler);

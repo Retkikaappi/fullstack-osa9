@@ -11,6 +11,7 @@ import {
   CardContent,
   Typography,
   Paper,
+  Button,
 } from '@mui/material';
 import LensIcon from '@mui/icons-material/Lens';
 
@@ -18,10 +19,12 @@ import { Diagnosis, Patient, Entry, HealthCheckRating } from '../../types';
 import { useParams } from 'react-router-dom';
 import patients from '../../services/patients';
 import { useEffect, useState } from 'react';
+import EntryForm from './EntryForm';
 
 const SinglePatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
   const { id } = useParams();
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
     const getPatient = async (id: string) => {
@@ -90,7 +93,9 @@ const SinglePatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
     }
   };
 
-  console.log(patient);
+  const toggleForm = () => {
+    setShow(!show);
+  };
 
   return (
     <Card>
@@ -104,12 +109,27 @@ const SinglePatientPage = ({ diagnoses }: { diagnoses: Diagnosis[] }) => {
           ) : (
             <WcIcon />
           )}
+          <Button
+            sx={show ? { display: 'none' } : { display: '' }}
+            variant='contained'
+            onClick={toggleForm}
+          >
+            Add an entry
+          </Button>
         </Typography>
 
         <Typography variant='subtitle1'>ssn: {patient.ssn}</Typography>
         <Typography variant='subtitle1'>
           occupation: {patient.occupation}
         </Typography>
+
+        <EntryForm
+          patient={patient}
+          diagnoses={diagnoses}
+          toggleForm={toggleForm}
+          show={show}
+          setPatient={setPatient}
+        />
 
         {patient.entries.map((e) => (
           <Paper
