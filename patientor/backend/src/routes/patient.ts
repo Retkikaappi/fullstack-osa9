@@ -47,6 +47,12 @@ router.get('/:id', (req, resp) => {
   resp.send(patientService.getSinglePatientRecord(id));
 });
 
+router.post('/:id/entries', (req, resp) => {
+  const { id } = req.params;
+  const newEntry = patientService.addNewEntry(id, req.body);
+  resp.send(newEntry);
+});
+
 router.use(errorHandler);
 
 export default router;
