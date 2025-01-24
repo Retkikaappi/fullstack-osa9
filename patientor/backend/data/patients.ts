@@ -47,6 +47,7 @@ const rawData = [
 const data: PatientRecord[] = rawData.map((e) => {
   const obj = newPatientSchema.parse(e) as PatientRecord;
   obj.id = e.id;
+  obj.entries = [];
   return obj;
 });
 

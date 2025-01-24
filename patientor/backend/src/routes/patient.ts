@@ -42,6 +42,11 @@ router.post(
   }
 );
 
+router.get('/:id', (req, resp) => {
+  const { id } = req.params;
+  resp.send(patientService.getSinglePatientRecord(id));
+});
+
 router.use(errorHandler);
 
 export default router;

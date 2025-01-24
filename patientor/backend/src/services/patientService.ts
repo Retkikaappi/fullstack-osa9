@@ -12,9 +12,17 @@ const getPublicPatientRecords = (): publicPatientRecord[] => {
   }));
 };
 
+const getSinglePatientRecord = (id: string): PatientRecord => {
+  const patient = patients.find((e) => e.id === id);
+  if (!patient) throw new Error('could not find requested patient');
+
+  return patient;
+};
+
 const createNewPatient = (patient: NewPatientRecord): PatientRecord => {
   const newPatient = {
     id: uuid(),
+    entries: [],
     ...patient,
   };
   console.log('new patient', newPatient);
@@ -22,4 +30,8 @@ const createNewPatient = (patient: NewPatientRecord): PatientRecord => {
   return newPatient;
 };
 
-export default { getPublicPatientRecords, createNewPatient };
+export default {
+  getPublicPatientRecords,
+  createNewPatient,
+  getSinglePatientRecord,
+};
