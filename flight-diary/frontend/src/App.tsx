@@ -1,5 +1,6 @@
 import { SyntheticEvent, useEffect, useState } from 'react';
 import { getDiaries, postDiary } from './service/diary';
+//decided to only use types from the backend/src/types to keep it as the single source of truth.
 import { DiaryEntry } from '../../backend/src/types';
 import axios from 'axios';
 import { assertDiaryEntry } from './helpers';
