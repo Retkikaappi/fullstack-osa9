@@ -44,10 +44,7 @@ const App = () => {
                 />
               }
             />
-            <Route
-              path='/:id'
-              element={<SinglePatientPage patients={patients} />}
-            />
+            <Route path='/:id' element={<SinglePatientPage />} />
           </Routes>
         </Container>
       </Router>

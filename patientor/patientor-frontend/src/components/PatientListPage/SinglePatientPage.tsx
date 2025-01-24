@@ -6,13 +6,26 @@ import WomanIcon from '@mui/icons-material/Woman';
 import WcIcon from '@mui/icons-material/Wc';
 import { Patient } from '../../types';
 import { useParams } from 'react-router-dom';
+import patients from '../../services/patients';
+import { useEffect, useState } from 'react';
 
-const SinglePatientPage = ({ patients }: { patients: Patient[] }) => {
+const SinglePatientPage = () => {
   const { id } = useParams();
-  const patient = patients.find((e) => e.id === id);
+  const [patient, setPatient] = useState<Patient | null>(null);
+
+  useEffect(() => {
+    const getPatient = async (id: string) => {
+      const resp = await patients.getOne(id);
+      setPatient(resp);
+    };
+
+    if (id) {
+      getPatient(id);
+    }
+  }, [id]);
 
   if (!patient) {
-    return null;
+    return <Typography>Bad search params</Typography>;
   }
   console.log(id);
   console.log(patient);
